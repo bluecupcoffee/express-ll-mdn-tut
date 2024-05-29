@@ -4,7 +4,7 @@ import { DataTypes, Model } from 'sequelize';
 
 class BookInstance extends Model {}
 BookInstance.init({
-    book: {
+    bookId: {
         type: DataTypes.INTEGER,
         references: {
             model: Book,

@@ -32,7 +32,7 @@ router.get("/book/:id/update", BookController.book_update_post);
 
 router.get("/book/:id", BookController.book_detail);
 
-router.get("/book", BookController.book_list);
+router.get("/books", BookController.book_list);
 
 // Author routes
 router.get("/author/create", AuthorController.author_create_get);

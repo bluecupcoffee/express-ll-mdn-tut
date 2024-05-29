@@ -1,13 +1,51 @@
 import Book from "../models/book.js";
+import Genre from "../models/genre.js";
+import Author from "../models/author.js";
+import { Op } from "sequelize";
+import BookInstance from "../models/bookinstance.js";
+
 import asyncHandler from "express-async-handler";
 
 export const index = asyncHandler(async (req, res, next) => {
-res.send("NOT IMPLEMENTED: Site Home Page");
+    const [
+        numBooks,
+        numBookInstances,
+        numAvailableBookInstances,
+        numAuthors,
+        numGenres
+    ] = await Promise.all([
+        Book.count(),
+        BookInstance.count(),
+        BookInstance.count({
+            where: {
+                status: {
+                    [Op.eq]: 'Available',
+                }
+            }
+        }),
+        Author.count(),
+        Genre.count()
+    ]);
+
+    res.render("index", {
+        title: "Local Library Home",
+        book_count: numBooks,
+        book_instance_count: numBookInstances,
+        book_instance_available_count: numAvailableBookInstances,
+        author_count: numAuthors,
+        genre_count: numGenres
+    });
 });
 
 // Display list of all books.
 export const book_list = asyncHandler(async (req, res, next) => {
-res.send("NOT IMPLEMENTED: Book list");
+    const allBooks = await Book.findAll({
+        include: Author
+    });
+    allBooks.forEach( item => {
+        console.log(`${JSON.stringify(item, null, 2)}`);
+    });
+    res.render("book_list", {title: "Book List", book_list: allBooks});
 });
 
 // Display detail page for a specific book.

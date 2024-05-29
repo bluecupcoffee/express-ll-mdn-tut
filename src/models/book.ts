@@ -5,13 +5,6 @@ import Author from './author.js';
 class Book extends Model {
 }
 Book.init({
-    authorId: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: Author,
-            key: 'id'
-        }
-    },
     title: {
         type: DataTypes.STRING,
         allowNull: false
@@ -40,5 +33,8 @@ Book.init({
     sequelize: sqlize,
     modelName: 'Books'
 });
+
+Author.hasMany(Book);
+Book.belongsTo(Author);
 
 export default Book;

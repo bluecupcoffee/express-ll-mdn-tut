@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import usersModel from "../models/users";
+import usersModel from "../models/users.js";
 
 const userController = {
   getUsers: (req: Request, res: Response, next: NextFunction) => {

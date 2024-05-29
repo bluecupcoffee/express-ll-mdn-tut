@@ -8,7 +8,7 @@ export async function createBook(authorIn: Author, bookTitleIn: String, genresIn
     const current_time = new Date().getMilliseconds();
     const newBook = await Book.create({
         title: `${bookTitleIn} ${current_time}`,
-        authorId: authorIn.get('id'),
+        AuthorId: authorIn.get('id'),
         genres: genresIn?.map( gen => gen.get('id'))
     });
     return newBook;
