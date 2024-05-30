@@ -2,6 +2,7 @@ import sqlize from './models/sqlize.js';
 import Book from './models/book.js';
 import Author from './models/author.js';
 import Genre from './models/genre.js';
+import BookInstance from './models/bookinstance.js';
 
 export async function createBook(authorIn: Author, bookTitleIn: String, genresIn?: Genre[]) {
     // rng uniqueness
@@ -34,6 +35,21 @@ export async function createGenre(genreName: String) {
         name: `${genreName} ${current_time}`
     });
     return await newGenre;
+}
+
+export async function createBookInstance(inBookId: number,
+    inPrint: String,
+    inStatus: String,
+    dueBack: Date
+) {
+    const newInstance = await BookInstance.create({
+        bookId: inBookId,
+        imprint: inPrint,
+        status: inStatus,
+        due_back: dueBack
+    });
+
+    return newInstance;
 }
 
 export async function generateAuthors(numAuthors: number) {
@@ -84,4 +100,39 @@ export async function generateBooks(numBooks: number, authors: Author[], genres:
         bookArray.push(bookProm);
     }
     return await Promise.all(bookArray);
+}
+
+export async function generateBookInstances(numInstances: number){
+    // for storing list of bookinstances
+    let promList: Promise<BookInstance>[] = [];
+    // get all books and generate instances of them
+    const books = await Book.findAll();
+
+
+    for(let i = 0; i < numInstances; i++) {
+        let rando = Math.random();
+        const bookId = books[Math.floor(books.length * rando)]
+                        .get('id') as number;
+        rando = rando > 0.50 ? 2 : 3;
+        // create 2 or 3 instances
+        for(let j = 0; j < rando; j++) {
+            var newDate = new Date()
+            const bookInst = createBookInstance(
+                bookId,
+                "Something about imprint",
+                'Loaned',
+                new Date(addDays(new Date(), 7))
+            );
+            promList.push(bookInst);
+        }
+    }
+    const instances = await Promise.all(promList);
+    return instances;
+
+}
+
+function addDays(date: Date, days: number) {
+    const curr_date = new Date(date);
+    const future_date = curr_date.setDate(curr_date.getDate() + days);
+    return future_date;
 }

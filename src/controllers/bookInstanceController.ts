@@ -1,9 +1,16 @@
+import Book from "../models/book.js";
 import BookInstance from "../models/bookinstance.js";
 import asyncHandler from "express-async-handler";
 
 // Display list of all BookInstances.
 export const bookinstance_list = asyncHandler(async (req, res, next) => {
-    res.send("NOT IMPLEMENTED: BookInstance list");
+    const bookInstanceList = await BookInstance.findAll({
+      include: Book
+    });
+    res.render("bookinstance_list", {
+      title: "Book Instance List",
+      bookinstance_list: bookInstanceList
+    });
   });
   
 // Display detail page for a specific BookInstance.

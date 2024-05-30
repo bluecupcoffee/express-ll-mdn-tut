@@ -42,4 +42,7 @@ BookInstance.init({
     modelName: 'BookInstances'
 });
 
+Book.hasMany(BookInstance);
+BookInstance.belongsTo(Book);
+
 export default BookInstance;

@@ -42,9 +42,7 @@ export const book_list = asyncHandler(async (req, res, next) => {
     const allBooks = await Book.findAll({
         include: Author
     });
-    allBooks.forEach( item => {
-        console.log(`${JSON.stringify(item, null, 2)}`);
-    });
+    
     res.render("book_list", {title: "Book List", book_list: allBooks});
 });
 
