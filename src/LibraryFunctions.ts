@@ -43,7 +43,7 @@ export async function createBookInstance(inBookId: number,
     dueBack: Date
 ) {
     const newInstance = await BookInstance.create({
-        bookId: inBookId,
+        BookId: inBookId,
         imprint: inPrint,
         status: inStatus,
         due_back: dueBack

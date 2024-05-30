@@ -4,13 +4,6 @@ import { DataTypes, Model } from 'sequelize';
 
 class BookInstance extends Model {}
 BookInstance.init({
-    bookId: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: Book,
-            key: 'id'
-        }
-    },
     imprint: {
         type: DataTypes.STRING,
         allowNull: false,

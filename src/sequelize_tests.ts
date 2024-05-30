@@ -21,15 +21,16 @@ async function main() {
     // console.log(`GENRES:${genresList.length}\n${JSON.stringify(genresList, null, 2)}`);
     const booksList = await generateBooks(50, authorsList, genresList);
     const instanceList = await generateBookInstances(50);
-    const checkCount = await BookInstance.findAndCountAll({
+    const instances = await BookInstance.findAll({
+        include: Book,
         where: {
             status: {
                 [Op.eq]: 'Loaned'
             }
         }
     });
-    console.log(`NUMBER OF AVAILABLE BOOK INSTANCES: ${checkCount.count}`);
-
+    
+    console.log(JSON.stringify(instances, null, 2));
     //console.log(JSON.stringify(booksList, null, 2));
 
 
