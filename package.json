@@ -10,6 +10,7 @@
     "build": "tsc"
   },
   "dependencies": {
+    "@types/luxon": "^3.4.2",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "dirname-filename-esm": "^1.1.1",
@@ -19,6 +20,7 @@
     "express-async-handler": "^1.2.0",
     "hbs": "~4.0.4",
     "http-errors": "~1.6.3",
+    "luxon": "^3.4.4",
     "mariadb": "^3.3.0",
     "morgan": "~1.9.1",
     "pug": "2.0.0-beta11",

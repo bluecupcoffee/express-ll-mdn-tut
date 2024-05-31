@@ -1,5 +1,6 @@
 import sqlize from './sqlize.js';
 import Book from './book.js';
+import { DateTime }  from 'luxon';
 import { DataTypes, Model } from 'sequelize';
 
 class BookInstance extends Model {}
@@ -25,6 +26,13 @@ BookInstance.init({
         type: DataTypes.VIRTUAL,
         get() {
             return `/catalog/bookinstance/${this.get('id')}`;
+        }
+    },
+    due_back_formatted: {
+        type: DataTypes.VIRTUAL,
+        get() {
+            return DateTime.fromJSDate(this.get('due_back') as Date)
+                .toLocaleString(DateTime.DATE_MED);
         }
     }
 
