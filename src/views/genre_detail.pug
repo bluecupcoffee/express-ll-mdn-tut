@@ -1,0 +1,16 @@
+extends layout
+block content
+    h1 Genre: #{genre.get('name')}
+    div(style='margin-left:20px;margin-top:20px;')
+        h2(style='font-size: 1.5rem;') Books
+        if genre_books.length
+            dl
+                each book in genre_books
+                    dt
+                        a(href=book.get('url')) #{book.get('title')}
+                    if book.get('summary') === null
+                        dd No summary
+                    else 
+                        dd #{book.get('summary')}
+        else
+            p This genre has no books.

@@ -2,7 +2,12 @@ import Author from '../models/author.js';
 import asyncHandler from 'express-async-handler';
 
 export const author_list = asyncHandler(async (req, res, next) => {
-    res.send("NOT IMPLEMENTED: Author list");
+    const allAuthors = await Author.findAll();
+    res.render("author_list", {
+        title: "Author List",
+        author_list: allAuthors
+    });
+
 });
 
 export const author_detail = asyncHandler(async (req, res, next) => {

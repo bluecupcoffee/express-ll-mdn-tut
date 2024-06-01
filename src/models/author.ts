@@ -1,4 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
+import { DateTime } from 'luxon';
 import sqlize from './sqlize.js';
 
 class Author extends Model {}
@@ -22,7 +23,7 @@ Author.init({
     url: {
         type: DataTypes.VIRTUAL,
         get() {
-            return `/catalog/authors/${this.get('id')}`;
+            return `/catalog/author/${this.get('id')}`;
         }
     },
     name: {
@@ -31,6 +32,24 @@ Author.init({
             return `${this.get('first_name')} ${this.get('family_name')}`;
         }
     },
+    date_of_birth_formatted: {
+        type: DataTypes.VIRTUAL,
+        get() {
+            return DateTime.fromJSDate(this.get('date_of_birth') as Date)
+                    .toLocaleString(DateTime.DATETIME_MED);
+        }
+    },
+    date_of_death_formatted: {
+        type: DataTypes.VIRTUAL,
+        get() {
+            if (this.get('date_of_death') === null) {
+                return "N/A"
+            } else {
+                DateTime.fromJSDate(this.get('date_of_death') as Date)
+                    .toLocaleString(DateTime.DATETIME_MED);
+            }
+        }
+    }
 }, {
     sequelize: sqlize,
     modelName: 'Authors'

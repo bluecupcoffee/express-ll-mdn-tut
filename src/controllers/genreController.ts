@@ -1,15 +1,31 @@
 import Genre from "../models/genre.js";
+import Book from "../models/book.js";
+import { Op } from 'sequelize';
 import asyncHandler from "express-async-handler";
 
 
 // Display list of all Genre.
 export const genre_list = asyncHandler(async (req, res, next) => {
-res.send("NOT IMPLEMENTED: Genre list");
+    const allGenres = await Genre.findAll();
+    res.render("genre_list",{
+        title: "Genre List",
+        genre_list: allGenres
+    });
 });
 
 // Display detail page for a specific Genre.
 export const genre_detail = asyncHandler(async (req, res, next) => {
-res.send(`NOT IMPLEMENTED: Genre detail: ${req.params.id}`);
+    const genre = Genre.findByPk(req.params.id);
+    const booksInGenre = Book.findAll();
+
+    const [genreOut, booksInGenreOut] = await Promise.all([genre, booksInGenre]);
+
+    res.render("genre_detail", {
+        genre: genreOut,
+        genre_books: booksInGenreOut
+    });
+    
+
 });
 
 // Display Genre create form on GET.

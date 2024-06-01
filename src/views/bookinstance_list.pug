@@ -15,6 +15,6 @@ block content
                     else
                         span.text-warning #{val.get('status')}
                     if val.get('status')!='Available'
-                        span (Due: #{val.get('due_back')} )
+                        span (Due: #{val.get('due_back_formatted')} )
     else
         p There are no book copies in this library.

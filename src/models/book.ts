@@ -26,7 +26,7 @@ Book.init({
     url: {
         type: DataTypes.VIRTUAL,
         get() {
-            return `/catalog/books/${this.get('id')}`;
+            return `/catalog/book/${this.get('id')}`;
         }
     }
 }, {

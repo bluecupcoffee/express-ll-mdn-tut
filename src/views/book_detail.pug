@@ -1,0 +1,35 @@
+extends layout
+block content
+    h1 Title: #{book.get('title')}
+    p #[strong Author: ]
+        a(href=book.get('Author')['url']) #{book.get('Author')['name']}
+    p #[strong Summary: ]
+        if book.get('summary')==null
+            | "No summary" 
+        else 
+            | #{book.get('summary')}
+    p #[strong ISBN: ] #{book.get('ISBN')}
+    p #[strong Genre: ]
+        each val, index in book.get('genres')
+            a(href=`/catalog/genre/${val}`) #{val}
+            if index < book.get('genres').length - 1
+                |,&nbsp;
+    div(style='margin-left:20px;margin-top:20px;')
+        h2(style='font-size: 1.5rem') Copies
+
+        each val in book_instances
+            hr
+            if val.get('status')=='Available'
+                p.text-success #{val.get('status')}
+            else if val.get('status')=='Maintenance'
+                p.text-danger #{val.get('status')}
+            else
+                p.text-warning #{val.get('status')}
+            p #[strong Imprint: ] #{val.get('imprint')}
+            if val.get('status')!='Available'
+                p #[strong Due back: ] #{val.get('due_back')}
+            p #[strong Id: ]
+                a(href=val.get('url')) #{val.get('id')}
+
+        else
+            p There are no copies of this book in the library.
