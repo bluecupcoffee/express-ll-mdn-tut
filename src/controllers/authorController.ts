@@ -1,4 +1,5 @@
 import Author from '../models/author.js';
+import Book from '../models/book.js';
 import asyncHandler from 'express-async-handler';
 
 export const author_list = asyncHandler(async (req, res, next) => {
@@ -11,7 +12,19 @@ export const author_list = asyncHandler(async (req, res, next) => {
 });
 
 export const author_detail = asyncHandler(async (req, res, next) => {
-    res.send(`NOT IMPLEMENTED: Author detail: ${req.params.id}`);
+    const authorProm = Author.findByPk(req.params.id);
+    const bookProm = Book.findAll({
+        where: {
+            AuthorId: req.params.id,
+        }
+    });
+
+    const [authorRes, bookRes] = await Promise.all([authorProm, bookProm]);
+    
+    res.render("author_detail", {
+        author: authorRes,
+        author_books: bookRes
+    });
 });
 
 export const author_create_get = asyncHandler(async (req, res, next) => {

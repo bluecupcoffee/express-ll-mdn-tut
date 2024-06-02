@@ -3,6 +3,7 @@ import Book from './models/book.js';
 import Author from './models/author.js';
 import Genre from './models/genre.js';
 import BookInstance from './models/bookinstance.js';
+import BookGenre from './models/BookGenre.js';
 import { Op } from 'sequelize';
 import { generateAuthors, generateGenres, generateBooks, generateBookInstances } from './LibraryFunctions.js';
 
@@ -13,7 +14,7 @@ async function main() {
     console.log(Author.name);
     console.log(Genre.name);
     // console.log(BookInstance.name);
-    // console.log(BookGenre.name);
+    console.log(BookGenre.name);
 
     const authorsList = await generateAuthors(50);
     const genresList = await generateGenres(50);

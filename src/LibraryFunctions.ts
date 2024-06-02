@@ -3,6 +3,7 @@ import Book from './models/book.js';
 import Author from './models/author.js';
 import Genre from './models/genre.js';
 import BookInstance from './models/bookinstance.js';
+import BookGenre from './models/BookGenre.js';
 
 export async function createBook(authorIn: Author, bookTitleIn: String, genresIn?: Genre[]) {
     // rng uniqueness
@@ -83,22 +84,18 @@ export async function generateBooks(numBooks: number, authors: Author[], genres:
         // rng some genres
         let numGenres = Math.floor(Math.random() * 6);
         numGenres = numGenres < 1 ? 1 : numGenres;
-
-
-
-        let bookGenres: Genre[] = [];
-        for(let j = 0; j < numGenres; j++) {
-            const genreNo = Math.floor(Math.random() * genres.length);
-            bookGenres.push(genres[genreNo]);
-        }
         
         const bookProm = createBook(
             authors[Math.floor(Math.random() * (authors.length - 1))],
             `Book ${milli} ${i}`,
-            bookGenres
         );
         bookArray.push(bookProm);
+
     }
+    const createdBooks = await Promise.all(bookArray);
+    // TODO
+    // create book-genre entry on BookGenre table
+
     return await Promise.all(bookArray);
 }
 

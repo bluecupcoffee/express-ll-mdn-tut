@@ -1,6 +1,7 @@
 import sqlize from './sqlize.js';
 import {DataTypes, Model} from 'sequelize';
 import Author from './author.js';
+import Genre from './genre.js';
 
 class Book extends Model {
 }
@@ -17,11 +18,6 @@ Book.init({
         type: DataTypes.UUID,
         allowNull: false,
         defaultValue: DataTypes.UUIDV4
-    },
-    genres: {
-        type: DataTypes.JSON,
-        allowNull: false,
-        defaultValue: []
     },
     url: {
         type: DataTypes.VIRTUAL,
