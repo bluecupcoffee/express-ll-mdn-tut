@@ -1,5 +1,6 @@
 import Genre from "../models/genre.js";
 import Book from "../models/book.js";
+import BookGenre from "../models/BookGenre.js";
 import { Op } from 'sequelize';
 import asyncHandler from "express-async-handler";
 
@@ -15,13 +16,20 @@ export const genre_list = asyncHandler(async (req, res, next) => {
 
 // Display detail page for a specific Genre.
 export const genre_detail = asyncHandler(async (req, res, next) => {
-    const genre = Genre.findByPk(req.params.id);
-    const booksInGenre = Book.findAll();
-
-    var [genreOut, booksInGenreOut] = await Promise.all([genre, booksInGenre]);
     
+    const booksInGenre = BookGenre.findAll({
+        include: Book,
+        where: {
+            GenreId: req.params.id
+        },
+    });
+
+    const genreDetails = Genre.findByPk(req.params.id);
+
+    var [booksInGenreOut, genreDetailsOut] = await Promise.all([booksInGenre, genreDetails]);
+    console.log(JSON.stringify(booksInGenreOut, null, 2));
     res.render("genre_detail", {
-        genre: genreOut,
+        genre: genreDetailsOut,
         genre_books: booksInGenreOut
     });
     

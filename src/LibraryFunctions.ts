@@ -11,7 +11,6 @@ export async function createBook(authorIn: Author, bookTitleIn: String, genresIn
     const newBook = await Book.create({
         title: `${bookTitleIn} ${current_time}`,
         AuthorId: authorIn.get('id'),
-        genres: genresIn?.map( gen => gen.get('id'))
     });
     return newBook;
 }
@@ -53,6 +52,15 @@ export async function createBookInstance(inBookId: number,
     return newInstance;
 }
 
+export async function createBookGenre(inBookId: number, inGenreId: number) {
+    const bookGenre = await BookGenre.create({
+        BookId: inBookId,
+        GenreId: inGenreId
+    });
+
+    return bookGenre;
+}
+
 export async function generateAuthors(numAuthors: number) {
     let authorArray: Promise<Author>[] = [];
     for(let i = 0; i < numAuthors; i++) {
@@ -78,25 +86,48 @@ export async function generateGenres(numGenres: number) {
 }
 
 export async function generateBooks(numBooks: number, authors: Author[], genres: Genre[]) {
-    let bookArray: Promise<Book>[] =[];
+    let bookArrayProm: Promise<Book>[] =[];
+    let bookGenreArrayProm: Promise<BookGenre>[] = [];
     const milli = new Date().getMilliseconds();
+
     for(let i = 0; i < numBooks; i++) {
-        // rng some genres
-        let numGenres = Math.floor(Math.random() * 6);
-        numGenres = numGenres < 1 ? 1 : numGenres;
-        
+        // create the book promise
         const bookProm = createBook(
             authors[Math.floor(Math.random() * (authors.length - 1))],
             `Book ${milli} ${i}`,
         );
-        bookArray.push(bookProm);
-
+        // push promise on to array to complete later
+        bookArrayProm.push(bookProm);
     }
-    const createdBooks = await Promise.all(bookArray);
-    // TODO
-    // create book-genre entry on BookGenre table
 
-    return await Promise.all(bookArray);
+    // wait for books to be created
+    const createdBooks = await Promise.all(bookArrayProm);
+
+
+    // create promises for making BookGenres
+    for(let i = 0; i < createdBooks.length; i++) {
+        // rng a number of genres
+        let numGenres = Math.floor(Math.random() * 6);
+        numGenres = numGenres < 1 ? 1 : numGenres;
+        // create BookGenre data with random genres
+        for(let j = 0; j < numGenres; j++) {
+            let rngGenre = Math.floor(Math.random() * genres.length);
+            const bookGenreProm = createBookGenre(createdBooks[i].get('id') as number, genres[rngGenre].get('id') as number);
+            bookGenreArrayProm.push(bookGenreProm);
+        }
+    }
+
+    let bookGenres: BookGenre[] = [];
+    try{
+        bookGenres = await Promise.all(bookGenreArrayProm);
+    } catch(err) {
+        console.error(err);
+    } finally {
+        console.log(`Number of  BookGenres created: ${bookGenres.length}`)
+    }
+    
+
+    return await Promise.all(bookArrayProm);
 }
 
 export async function generateBookInstances(numInstances: number){

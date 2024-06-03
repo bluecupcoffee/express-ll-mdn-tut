@@ -1,6 +1,7 @@
 import sqlize from './sqlize.js';
 import {DataTypes, Model} from 'sequelize';
 import Author from './author.js';
+import BookGenre from './BookGenre.js';
 import Genre from './genre.js';
 
 class Book extends Model {
@@ -24,7 +25,7 @@ Book.init({
         get() {
             return `/catalog/book/${this.get('id')}`;
         }
-    }
+    },
 }, {
     sequelize: sqlize,
     modelName: 'Books'
@@ -32,5 +33,4 @@ Book.init({
 
 Author.hasMany(Book);
 Book.belongsTo(Author);
-
 export default Book;

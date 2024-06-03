@@ -8,7 +8,7 @@ import { Op } from 'sequelize';
 import { generateAuthors, generateGenres, generateBooks, generateBookInstances } from './LibraryFunctions.js';
 
 async function main() {
-    await sqlize.sync();
+    await sqlize.sync({force: true});
 
     console.log(Book.name);
     console.log(Author.name);
@@ -30,10 +30,12 @@ async function main() {
             }
         }
     });
-    
-    console.log(JSON.stringify(instances, null, 2));
+    const bookGenreCount = await BookGenre.count();    
+    //console.log(JSON.stringify(instances, null, 2));
     //console.log(JSON.stringify(booksList, null, 2));
-
+    console.log(`Number of created books: ${booksList.length}`);
+    console.log(`Number of created instances: ${instanceList.length}`);
+    console.log(`Number of book genres: ${bookGenreCount}`);
 
 }
 

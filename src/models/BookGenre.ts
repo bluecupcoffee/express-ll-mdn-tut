@@ -18,7 +18,8 @@ BookGenre.init({
         allowNull: false,
         references: {
             model: Book,
-            key: 'id'
+            key: 'id',
+
         },
     },
     GenreId: {
@@ -31,9 +32,16 @@ BookGenre.init({
     }
 }, {
     sequelize: sqlize,
-    modelName: 'BookGenres'
-}
+    modelName: 'BookGenres',
+});
 
-);
+BookGenre.belongsTo(Book, {
+    foreignKey: 'BookId',
+    constraints: true
+});
+BookGenre.belongsTo(Genre, {
+    foreignKey: 'GenreId',
+    constraints: true
+})
 
 export default BookGenre;

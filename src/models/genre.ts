@@ -1,4 +1,5 @@
 import sqlize from './sqlize.js';
+import BookGenre from './BookGenre.js';
 import { DataTypes, Model} from 'sequelize';
 
 class Genre extends Model {
@@ -18,5 +19,6 @@ Genre.init({
     sequelize: sqlize,
     modelName: 'Genres'
 });
+
 
 export default Genre;
