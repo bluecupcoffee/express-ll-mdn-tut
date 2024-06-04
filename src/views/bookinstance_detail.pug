@@ -1,3 +1,17 @@
 extends layout
 block content
     h1 ID: #{bookinstance.get('id')}
+
+    p #[strong Title: ]
+        a(href=bookinstance.get('Book')['url']) #{bookinstance.get('Book')['title']}
+    p #[strong Imprint: ] #{bookinstance.get('imprint')}
+
+    p #[strong Status: ]
+        if bookinstance.get('status')=='Available'
+            span.text-success #{bookinstance.get('status')}
+        else if bookinstance.get('status')=='Maintenance'
+            span.text-danger #{bookinstance.get('status')}
+        else
+            span.text-warning #{bookinstance.get('status')}
+    if bookinstance.get('status')!='Avaiable'
+        p #[strong Due back: ] #{bookinstance.get('due_back')}

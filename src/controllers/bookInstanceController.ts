@@ -15,7 +15,13 @@ export const bookinstance_list = asyncHandler(async (req, res, next) => {
   
 // Display detail page for a specific BookInstance.
 export const bookinstance_detail = asyncHandler(async (req, res, next) => {
-res.send(`NOT IMPLEMENTED: BookInstance detail: ${req.params.id}`);
+  const bookInstance = await BookInstance.findByPk(req.params.id, {
+    include: Book
+  });
+  
+  res.render("bookinstance_detail", {
+    bookinstance: bookInstance
+  });
 });
 
 // Display BookInstance create form on GET.
