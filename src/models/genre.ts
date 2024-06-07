@@ -3,6 +3,7 @@ import BookGenre from './BookGenre.js';
 import { DataTypes, Model} from 'sequelize';
 
 class Genre extends Model {
+    declare checked: boolean;
 }
 Genre.init({
     name: {

@@ -10,9 +10,9 @@ block content
             | #{book.get('summary')}
     p #[strong ISBN: ] #{book.get('ISBN')}
     p #[strong Genre: ]
-        each val, index in book.get('genres')
-            a(href=`/catalog/genre/${val}`) #{val}
-            if index < book.get('genres').length - 1
+        each val, index in book_genres.map(g => g.get('Genre'))
+            a(href=`/catalog/genre/${val}`) #{val['name']}
+            if index < book_genres.length - 1
                 |,&nbsp;
     div(style='margin-left:20px;margin-top:20px;')
         h2(style='font-size: 1.5rem') Copies
@@ -33,3 +33,9 @@ block content
 
         else
             p There are no copies of this book in the library.
+
+    hr
+    p
+        a(href=`${book.get('url')}/delete`) Delete Book
+    p
+        a(href=`${book.get('url')}/update`) Update Book

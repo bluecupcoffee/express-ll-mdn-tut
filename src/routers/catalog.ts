@@ -13,7 +13,7 @@ import * as BookInstanceController from "../controllers/bookInstanceController.j
 router.get("/", BookController.index);
 
 // GET req for creating a book. must come before routes that display a book
-router. get("/book/create", BookController.book_create_post);
+router.get("/book/create", BookController.book_create_get);
 
 // POST req for creating book
 router.post("/book/create", BookController.book_create_post);
@@ -28,7 +28,7 @@ router.post("/book/:id/delete", BookController.book_delete_post);
 router.get("/book/:id/update", BookController.book_update_get);
 
 // POST req to udpate book 
-router.get("/book/:id/update", BookController.book_update_post);
+router.post("/book/:id/update", BookController.book_update_post);
 
 router.get("/book/:id", BookController.book_detail);
 
