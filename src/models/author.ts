@@ -49,6 +49,28 @@ Author.init({
                     .toLocaleString(DateTime.DATETIME_MED);
             }
         }
+    },
+    date_of_birth_formatted2: {
+        type: DataTypes.VIRTUAL,
+        get() {
+            if (this.get('date_of_birth') === null) {
+                return null
+            } else {
+            return DateTime.fromJSDate(this.get('date_of_birth') as Date)
+                    .toFormat("yyyy-MM-dd");
+            }
+        }
+    },
+    date_of_death_formatted2: {
+        type: DataTypes.VIRTUAL,
+        get() {
+            if (this.get('date_of_death') === null) {
+                return null;
+            } else {
+            return DateTime.fromJSDate(this.get('date_of_death') as Date)
+                    .toFormat("yyyy-MM-dd");
+            }
+        }
     }
 }, {
     sequelize: sqlize,
