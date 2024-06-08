@@ -3,6 +3,7 @@ import Book from "../models/book.js";
 import BookGenre from "../models/BookGenre.js";
 import { Op } from 'sequelize';
 import asyncHandler from "express-async-handler";
+import { body, validationResult } from 'express-validator';
 
 
 // Display list of all Genre.
@@ -38,13 +39,47 @@ export const genre_detail = asyncHandler(async (req, res, next) => {
 
 // Display Genre create form on GET.
 export const genre_create_get = asyncHandler(async (req, res, next) => {
-res.send("NOT IMPLEMENTED: Genre create GET");
+    res.render("genre_form", {
+        title: "Create genre"
+    });
 });
 
 // Handle Genre create on POST.
-export const genre_create_post = asyncHandler(async (req, res, next) => {
-res.send("NOT IMPLEMENTED: Genre create POST");
-});
+export const genre_create_post = [
+    body("name", "Genre name must be at least 3 letters")
+        .trim()
+        .isLength({min: 3})
+        .escape(),
+
+    asyncHandler(async (req, res, next) => {
+        const errors = validationResult(res);
+        const protoGenre = new Genre({
+            name: req.body.name
+        });
+
+        if(!errors.isEmpty()) {
+            res.render("genre_form", {
+                title: "Create genre",
+                genre: protoGenre,
+                errors: errors.array()
+            });
+            return;
+        } else {
+            const genreCheck = await Genre.findOne({
+                where: {
+                    name: req.body.name
+                }
+            });
+
+            if(genreCheck!==null) {
+                res.redirect(genreCheck.get('url') as string)
+            } else {
+                const savedGenre = await protoGenre.save();
+                res.redirect(savedGenre.get('url') as string);
+            }
+        }
+    })
+]
 
 // Display Genre delete form on GET.
 export const genre_delete_get = asyncHandler(async (req, res, next) => {

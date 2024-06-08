@@ -111,6 +111,8 @@ export const book_create_post = [
             req.body.genre = 
                 typeof req.body.genre === "undefined" ? [] : [req.body.genre];
         }
+        console.log(`REQ BODY 1 ########################################################\n${JSON.stringify(req.body, null, 2)}`);
+
         next();
     },
 
@@ -136,7 +138,7 @@ export const book_create_post = [
     asyncHandler(async(req, res, next) => {
         const errors = validationResult(req);
 
-        const book = await Book.create({
+        const bookTest = new Book({
             title: req.body.title,
             AuthorId: req.body.author,
             summary: req.body.summary,
@@ -144,7 +146,7 @@ export const book_create_post = [
         });
 
         if(!errors.isEmpty()) {
-            const[ allAuths, allGenres, bookGenres ] = await Promise.all([
+            const[ allAuths, allGenres ] = await Promise.all([
                 Author.findAll({
                     order: [
                         ['family_name', 'ASC']
@@ -155,31 +157,33 @@ export const book_create_post = [
                         ['name', 'ASC']
                     ]
                 }),
-                BookGenre.findAll({
-                    where: {
-                        BookId: book.get('id')
-                    }
-                })
             ]);
-
-            const bookGenreIds = bookGenres.map(bg => bg.get('GenreId') as number)
-            for(const genre of allGenres) {
-                if(bookGenreIds.includes(genre.get('id') as number)) {
-                    genre.checked = true;
-                }
-            }
 
             res.render("book_form", {
                 title: "Create Book",
                 authors: allAuths,
                 genres: allGenres,
-                book: book,
+                book: bookTest,
                 errors: errors.array()
             });
+            return;
         } else {
-            await book.save({
+            // create book and associated genres if any
+            const book = await Book.create({
+                title: req.body.title,
+                AuthorId: req.body.author,
+                summary: req.body.summary,
+                ISBN: req.body.isbn,
+            });
 
-            })
+            let bgPromise: Promise<BookGenre>[] = [];
+            (req.body.genre as string[]).forEach(genreId => {
+                bgPromise.push(BookGenre.create({
+                    BookId: book.get('id'),
+                    GenreId: parseInt(genreId, 10)
+                }));
+            });
+
             res.redirect(book.get('url')as string);
         }
 

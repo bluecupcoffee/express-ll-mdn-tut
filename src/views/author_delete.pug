@@ -1,0 +1,22 @@
+extends layout
+block content
+    h1 #{title}: #{author.get('name')}
+    p #{author.get('date_of_birth_formatted2')} - #{author.get('date_of_death_formatted2')}
+
+    if author_books.length
+        p #[strong Delete the following books before attempting to delete this author.]
+        div(style='margin-left:20px; margin-top:20px')
+            h4 Books
+            dl
+                each book in author_books
+                    dt
+                        a(href=book.get('url')) #{book.get('title')}
+                    dd #{book.get('summary')}
+    else
+        p Do you really want to delete this author?
+
+        form(method='POST')
+            div.form-group
+                input#authorid.form-control(type='hidden', name='authorid', value=author.get('id'))
+            
+            button.btn.btn-primary(type='submit') Delete
