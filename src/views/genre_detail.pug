@@ -14,3 +14,8 @@ block content
                         dd #{book.get('Book')['summary']}
         else
             p This genre has no books.
+    hr
+    p
+        a(href=`${genre.get('url')}/delete`) Delete genre
+    p
+        a(href=`${genre.get('url')}/update`) Update genre

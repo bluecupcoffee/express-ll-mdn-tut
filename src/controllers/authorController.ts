@@ -23,7 +23,10 @@ export const author_detail = asyncHandler(async (req, res, next) => {
     });
 
     const [authorRes, bookRes] = await Promise.all([authorProm, bookProm]);
-    
+    if(authorRes===null) {
+        res.status(404).send('Author not found');
+    }
+
     res.render("author_detail", {
         author: authorRes,
         author_books: bookRes
@@ -97,6 +100,7 @@ export const author_delete_get = asyncHandler(async (req, res, next) => {
     assert(booksByAuthor!==null, "Book list is null");
     if(author===null) {
         res.redirect("/catalog/authors");
+        return;
     }
     res.render("author_delete", {
         title: "Delete author",
