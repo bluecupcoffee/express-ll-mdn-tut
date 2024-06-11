@@ -14,4 +14,9 @@ block content
         else
             span.text-warning #{bookinstance.get('status')}
     if bookinstance.get('status')!='Avaiable'
-        p #[strong Due back: ] #{bookinstance.get('due_back')}
+        p #[strong Due back: ] #{bookinstance.get('due_back_yyyy_mm_dd')}
+    hr
+    p
+        a(href=`${bookinstance.get('url')}/delete`) Delete book instance
+    p
+        a(href=`${bookinstance.get('url')}/update`) Update book instance

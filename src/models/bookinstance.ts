@@ -19,8 +19,7 @@ BookInstance.init({
     },
     due_back: {
         type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: DataTypes.NOW
+        allowNull: true,
     },
     url: {
         type: DataTypes.VIRTUAL,
@@ -33,6 +32,13 @@ BookInstance.init({
         get() {
             return DateTime.fromJSDate(this.get('due_back') as Date)
                 .toLocaleString(DateTime.DATE_MED);
+        }
+    },
+    due_back_yyyy_mm_dd: {
+        type: DataTypes.VIRTUAL ,
+        get() {
+            return DateTime.fromJSDate(this.get('due_back') as Date)
+                .toFormat('yyyy-MM-dd');
         }
     }
 
