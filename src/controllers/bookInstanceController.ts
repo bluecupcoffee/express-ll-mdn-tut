@@ -102,7 +102,7 @@ export const bookinstance_delete_post = asyncHandler(async (req, res, next) => {
     throw new HttpError(404, "BookInstance not found");
     return;
   } else {
-    await BookInstance.destroy();
+    await bookInstance.destroy();
     res.redirect("/catalog/bookinstances");
   }
 });
