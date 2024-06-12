@@ -1,0 +1,34 @@
+extends layout
+block content
+    h1 #{title}: #{book.get('title')}(ID: #{book.get('id')})
+    form(method='POST')
+        div.form-group
+            if book_instances.length || book_genres.length
+                if book_instances.length
+                    p #[strong Delete the following BookInstances before attempting to delete the book]
+                    div(style='margin-left:20px; margin-top:20px')
+                        p #[strong BookInstances]
+                            dl
+                                each bi in book_instances
+                                    dt
+                                        a(href=bi.get('url')) ID: #{bi.get('id')} (Due back: #{bi.get('due_back_yyyy_mm_dd')})
+                                    dd #{bi.get('status')}
+                if book_genres.length
+                    p #[strong Remove the following genres from the book before attempting to delete the book]
+                    div(style='margin-left:20px; margin-top:20px')
+                        p #[strong Genres]
+                            dl
+                                each g in book_genres
+                                    dt #{g.get('name')}
+                                    dd ID: #{g.get('id')}
+                        a(href=`${book.get('url')}/update`) Remove genres here
+
+
+                
+
+            else
+                p Do you really want to delete this book?
+                form(method='POST')
+                    div.form-group
+                        input#bookid.form-control(type='hidden', name='bookid', value=book.get('id'))
+                    button.btn.btn-primary(type='submit') Delete

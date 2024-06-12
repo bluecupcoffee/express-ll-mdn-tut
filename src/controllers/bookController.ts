@@ -193,12 +193,68 @@ export const book_create_post = [
 
 // Display book delete form on GET.
 export const book_delete_get = asyncHandler(async (req, res, next) => {
-res.send("NOT IMPLEMENTED: Book delete GET");
+    const book = await Book.findByPk(req.params.id);
+    const bookGenres = await BookGenre.findAll({
+        where: {
+            BookId: req.params.id
+        }
+    });
+    const bookInstances = await BookInstance.findAll({
+        where: {
+            BookId: req.params.id
+        }
+    });
+    if(book===null) {
+        res.status(404).send("Book not found");
+        return;
+    }
+    res.render("book_delete", {
+        title: "Delete book",
+        book: book,
+        book_instances: bookInstances,
+        book_genres: bookGenres
+    });
 });
 
 // Handle book delete on POST.
 export const book_delete_post = asyncHandler(async (req, res, next) => {
-res.send("NOT IMPLEMENTED: Book delete POST");
+    const book = await Book.findByPk(req.params.id);
+    const bookGenres = await BookGenre.findAll({
+        where: {
+            BookId: req.params.id
+        }
+    });
+    const bookInstances = await BookInstance.findAll({
+        where: {
+            BookId: req.params.id
+        }
+    });
+
+    // i don't have anything to prevent other users from deleting the book before
+    // another user so we're doing one last safety check
+    if(book===null) {
+        res.status(404).send("Book not found");
+        return;
+    }
+    // i don't have anything to prevent other users from creating more instances
+    // before another user so we're doing one last safety check
+    if(bookInstances.length > 0 || bookGenres.length > 0) {
+        res.render("book_delete", {
+            title: "Delete book",
+            book: book,
+            book_instances: bookInstances,
+            book_genres: bookGenres
+        });
+        return;
+    }
+    try{
+        await book.destroy();
+    } catch (err) {
+        throw new HttpError(500, (err as Error).message);
+    }
+
+    res.redirect("/catalog/books");
+
 });
 
 // Display book update form on GET.
